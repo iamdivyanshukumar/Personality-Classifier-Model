@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Type Classifier</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Personality Type Classifier</h1>
+        <p>Discover your personality type by answering a series of questions about your preferences and behaviors.</p>
+        
+        <div class="card">
+            <h2>How It Works</h2>
+            <ul>
+                <li>Answer 30 simple questions about yourself</li>
+                <li>Each question is rated on a scale from 1 to 10</li>
+                <li>Our AI model will analyze your responses</li>
+                <li>Get your personality type (Introvert, Extrovert, or Ambivert)</li>
+            </ul>
+            
+            <form method="POST" action="{{ url_for('main.index') }}">
+                <button type="submit" class="btn">Start the Test</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

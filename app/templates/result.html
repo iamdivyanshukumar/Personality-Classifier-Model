@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Personality Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="result-card">
+            <h1>Your Personality Type: <span class="personality">{{ personality }}</span></h1>
+            <p class="confidence">Confidence: {{ "%.2f"|format(confidence) }}%</p>
+            
+            <div class="description">
+                <h2>What This Means</h2>
+                <p>{{ description }}</p>
+            </div>
+            
+            <div class="traits">
+                <h2>Key Traits</h2>
+                {% if personality == 'Introvert' %}
+                <ul>
+                    <li>Prefers solitude or small groups</li>
+                    <li>Thoughtful and reflective</li>
+                    <li>Good listener</li>
+                    <li>Deep thinker</li>
+                </ul>
+                {% elif personality == 'Extrovert' %}
+                <ul>
+                    <li>Energized by social interaction</li>
+                    <li>Outgoing and talkative</li>
+                    <li>Enjoys being the center of attention</li>
+                    <li>Acts first, thinks later</li>
+                </ul>
+                {% else %}
+                <ul>
+                    <li>Balanced between introversion and extroversion</li>
+                    <li>Adaptable to different social situations</li>
+                    <li>Enjoys both socializing and alone time</li>
+                    <li>Comfortable in most environments</li>
+                </ul>
+                {% endif %}
+            </div>
+            
+            <a href="{{ url_for('main.index') }}" class="btn">Take the Test Again</a>
+        </div>
+    </div>
+</body>
+</html>

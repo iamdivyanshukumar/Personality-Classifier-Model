@@ -3,47 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Personality Result</title>
+    <title>Your Personality Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <div class="container">
-        <div class="result-card">
-            <h1>Your Personality Type: <span class="personality">{{ personality }}</span></h1>
-            <p class="confidence">Confidence: {{ "%.2f"|format(confidence) }}%</p>
-            
-            <div class="description">
-                <h2>What This Means</h2>
-                <p>{{ description }}</p>
+        <header class="result-header">
+            <div class="logo">
+                <i class="fas fa-chart-pie"></i>
+                <h1>Your Personality Analysis</h1>
+            </div>
+            <p>Based on your responses, here's your personality assessment</p>
+        </header>
+        
+        <div class="result-container">
+            <div class="result-card">
+                <div class="personality-badge {{ personality.lower() }}">
+                    <i class="fas fa-user"></i>
+                    <h2>{{ personality }}</h2>
+                    <div class="confidence-score">
+                        <div class="confidence-fill" style="width: {{ confidence }}%"></div>
+                        <span>{{ "%.1f"|format(confidence) }}% Confidence</span>
+                    </div>
+                </div>
+                
+                <div class="result-details">
+                    <h3>What This Means</h3>
+                    <p>{{ description }}</p>
+                    
+                    <div class="traits-section">
+                        <h3>Key Characteristics</h3>
+                        <div class="traits-grid">
+                            {% if personality == 'Introvert' %}
+                            <div class="trait">
+                                <i class="fas fa-book"></i>
+                                <h4>Reflective</h4>
+                                <p>You enjoy deep thinking and introspection</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-mountain"></i>
+                                <h4>Independent</h4>
+                                <p>You're comfortable working and spending time alone</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-ear-listen"></i>
+                                <h4>Good Listener</h4>
+                                <p>You prefer to listen carefully before speaking</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-lightbulb"></i>
+                                <h4>Thoughtful</h4>
+                                <p>You consider things carefully before making decisions</p>
+                            </div>
+                            {% elif personality == 'Extrovert' %}
+                            <div class="trait">
+                                <i class="fas fa-users"></i>
+                                <h4>Sociable</h4>
+                                <p>You enjoy being around people and social gatherings</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-comments"></i>
+                                <h4>Communicative</h4>
+                                <p>You express yourself openly and enthusiastically</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-bolt"></i>
+                                <h4>Energetic</h4>
+                                <p>You gain energy from social interactions</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-compass"></i>
+                                <h4>Adventurous</h4>
+                                <p>You're willing to try new things and take initiative</p>
+                            </div>
+                            {% else %}
+                            <div class="trait">
+                                <i class="fas fa-balance-scale"></i>
+                                <h4>Balanced</h4>
+                                <p>You adapt well to different social situations</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-exchange-alt"></i>
+                                <h4>Flexible</h4>
+                                <p>You can easily switch between solitude and socializing</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-theater-masks"></i>
+                                <h4>Versatile</h4>
+                                <p>You feel comfortable in various environments</p>
+                            </div>
+                            <div class="trait">
+                                <i class="fas fa-handshake"></i>
+                                <h4>Diplomatic</h4>
+                                <p>You understand different perspectives easily</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
             
-            <div class="traits">
-                <h2>Key Traits</h2>
-                {% if personality == 'Introvert' %}
-                <ul>
-                    <li>Prefers solitude or small groups</li>
-                    <li>Thoughtful and reflective</li>
-                    <li>Good listener</li>
-                    <li>Deep thinker</li>
-                </ul>
-                {% elif personality == 'Extrovert' %}
-                <ul>
-                    <li>Energized by social interaction</li>
-                    <li>Outgoing and talkative</li>
-                    <li>Enjoys being the center of attention</li>
-                    <li>Acts first, thinks later</li>
-                </ul>
-                {% else %}
-                <ul>
-                    <li>Balanced between introversion and extroversion</li>
-                    <li>Adaptable to different social situations</li>
-                    <li>Enjoys both socializing and alone time</li>
-                    <li>Comfortable in most environments</li>
-                </ul>
-                {% endif %}
+            <div class="recommendations">
+                <h3>Recommendations for Your Type</h3>
+                <div class="recommendation-cards">
+                    {% if personality == 'Introvert' %}
+                    <div class="recommendation">
+                        <i class="fas fa-book-open"></i>
+                        <h4>Career Paths</h4>
+                        <p>Research, writing, programming, accounting, or design roles that allow for deep focus</p>
+                    </div>
+                    <div class="recommendation">
+                        <i class="fas fa-hiking"></i>
+                        <h4>Ideal Activities</h4>
+                        <p>Reading, hiking, focused creative projects, one-on-one conversations</p>
+                    </div>
+                    <div class="recommendation">
+                        <i class="fas fa-heart"></i>
+                        <h4>Self-Care</h4>
+                        <p>Schedule regular alone time to recharge after social interactions</p>
+                    </div>
+                    {% elif personality == 'Extrovert' %}
+                    <div class="recommendation">
+                        <i class="fas fa-briefcase"></i>
+                        <h4>Career Paths</h4>
+                        <p>Sales, teaching, management, public relations, or event planning</p>
+                    </div>
+                    <div class="recommendation">
+                        <i class="fas fa-gamepad"></i>
+                        <h4>Ideal Activities</h4>
+                        <p>Team sports, social events, group travel, networking events</p>
+                    </div>
+                    <div class="recommendation">
+                        <i class="fas fa-heart"></i>
+                        <h4>Self-Care</h4>
+                        <p>Ensure you have regular social interactions to maintain energy levels</p>
+                    </div>
+                    {% else %}
+                    <div class="recommendation">
+                        <i class="fas fa-briefcase"></i>
+                        <h4>Career Paths</h4>
+                        <p>Consulting, counseling, management, or roles requiring adaptability</p>
+                    </div>
+                    <div class="recommendation">
+                        <i class="fas fa-gamepad"></i>
+                        <h4>Ideal Activities</h4>
+                        <p>Mix of social and solitary activities based on your current needs</p>
+                    </div>
+                    <div class="recommendation">
+                        <i class="fas fa-heart"></i>
+                        <h4>Self-Care</h4>
+                        <p>Pay attention to your energy levels and balance social and alone time accordingly</p>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             
-            <a href="{{ url_for('main.index') }}" class="btn">Take the Test Again</a>
+            <div class="actions">
+                <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                    <i class="fas fa-redo"></i> Take Test Again
+                </a>
+                <button class="btn btn-secondary" onclick="window.print()">
+                    <i class="fas fa-print"></i> Print Results
+                </button>
+            </div>
         </div>
     </div>
 </body>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Assessment | Page {{ current_page + 1 }} of {{ total_pages }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>Personality Assessment</h1>
+            </div>
+            <div class="page-info">Page {{ current_page + 1 }} of {{ total_pages }}</div>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-header">
+                <div class="progress-text">Your Progress</div>
+                <div class="progress-percent">{{ progress }}% Complete</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ progress }}%"></div>
+            </div>
+        </div>
+
+        <form method="POST" class="questionnaire-form">
+            {{ form.hidden_tag() }}
+            
+            <div class="questions-container">
+                {% for i in range(questions|length) %}
+                {% set feature, question_text = questions[i] %}
+                {% set global_index = start_idx + i %}
+                <div class="question-card">
+                    <div class="question-header">
+                        <span class="question-number">Question {{ global_index + 1 }}</span>
+                        <div class="slider-value" id="value-{{ global_index }}">
+                            {% if session['responses'][global_index] is not none %}
+                                {{ session['responses'][global_index] }}
+                            {% else %}
+                                5
+                            {% endif %}
+                        </div>
+                    </div>
+                    <p class="question-text">{{ question_text }} (1-10)</p>
+                    
+                    <div class="slider-container">
+                        <div class="slider-wrapper">
+                            <input type="range" min="1" max="10" value="{% if session['responses'][global_index] is not none %}{{ session['responses'][global_index] }}{% else %}5{% endif %}" 
+                                   class="volume-slider" id="slider-{{ global_index }}" name="{{ feature }}"
+                                   oninput="updateSliderValue(this, {{ global_index }})">
+                        </div>
+                        <div class="slider-ticks">
+                            {% for tick in range(1, 11) %}
+                            <span class="tick" data-value="{{ tick }}"></span>
+                            {% endfor %}
+                        </div>
+                        
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="form-navigation">
+                {% if current_page > 0 %}
+                <a href="{{ url_for('main.questions', page=current_page-1) }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Previous Page
+                </a>
+                {% else %}
+                <a href="{{ url_for('main.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                {% endif %}
+                
+                <button type="submit" class="btn btn-primary">
+                    {% if current_page < total_pages - 1 %}
+                    Next Page <i class="fas fa-arrow-right"></i>
+                    {% else %}
+                    See Results <i class="fas fa-chart-line"></i>
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize slider values
+            const sliders = document.querySelectorAll('.volume-slider');
+            sliders.forEach(slider => {
+                const index = slider.id.split('-')[1];
+                updateSliderBackground(slider);
+                
+                // Auto-save via AJAX
+                slider.addEventListener('input', function() {
+                    fetch("{{ url_for('main.save_response') }}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            index: parseInt(index),
+                            value: parseFloat(this.value)
+                        })
+                    });
+                });
+            });
+            
+            function updateSliderBackground(slider) {
+                const value = (slider.value - slider.min) / (slider.max - slider.min) * 100;
+                slider.style.background = `linear-gradient(to right, #4361ee 0%, #4361ee ${value}%, #e9ecef ${value}%, #e9ecef 100%)`;
+            }
+            
+            window.updateSliderValue = function(slider, index) {
+                const valueDisplay = document.getElementById('value-' + index);
+                valueDisplay.textContent = slider.value;
+                updateSliderBackground(slider);
+            };
+        });
+    </script>
+</body>
+</html>
